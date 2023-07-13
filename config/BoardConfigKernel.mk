@@ -1,5 +1,5 @@
-# Copyright (C) 2018-2022 The LineageOS Project
-#           (C) 2018-2020 The PixelExperience Project
+# Copyright (C) 2018-2023 The LineageOS Project
+#           (C) 2018-2023 The PixelExperience Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -76,8 +76,10 @@ KERNEL_PATCHLEVEL := $(shell grep -s "^PATCHLEVEL = " $(TARGET_KERNEL_SOURCE)/Ma
 TARGET_KERNEL_VERSION ?= $(shell echo $(KERNEL_VERSION)"."$(KERNEL_PATCHLEVEL))
 
 # 5.10+ can fully compile without GCC by default
-ifneq (,$(filter 5.10, $(TARGET_KERNEL_VERSION)))
-    TARGET_KERNEL_NO_GCC ?= true
+ifeq ($(shell expr $(KERNEL_VERSION) \>= 5), 1)
+    ifeq ($(shell expr $(KERNEL_PATCHLEVEL) \>= 10), 1)
+        TARGET_KERNEL_NO_GCC ?= true
+    endif
 endif
 
 ifeq ($(TARGET_KERNEL_NO_GCC), true)
@@ -184,7 +186,7 @@ else
     KERNEL_MAKE_FLAGS += HOSTCFLAGS="--sysroot=$(BUILD_TOP)/prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8/sysroot -I$(BUILD_TOP)/prebuilts/kernel-build-tools/linux-x86/include"
     KERNEL_MAKE_FLAGS += HOSTLDFLAGS="--sysroot=$(BUILD_TOP)/prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8/sysroot -Wl,-rpath,$(BUILD_TOP)/prebuilts/kernel-build-tools/linux-x86/lib64 -L $(BUILD_TOP)/prebuilts/kernel-build-tools/linux-x86/lib64 -fuse-ld=lld --rtlib=compiler-rt"
 
-    TOOLS_PATH_OVERRIDE += PATH=$(BUILD_TOP)/prebuilts/tools-lineage/$(HOST_PREBUILT_TAG)/bin:$(TARGET_KERNEL_CLANG_PATH)/bin:$$PATH
+    TOOLS_PATH_OVERRIDE += PATH=$(BUILD_TOP)/prebuilts/tools-custom/$(HOST_PREBUILT_TAG)/bin:$(TARGET_KERNEL_CLANG_PATH)/bin:$$PATH
 endif
 
 # Set DTBO image locations so the build system knows to build them

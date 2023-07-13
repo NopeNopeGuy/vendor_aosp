@@ -83,7 +83,47 @@ camera_needs_client_info_lib {
     soong_config_variables: {
         camera_needs_client_info_lib: {
             cppflags: ["-DCAMERA_NEEDS_CLIENT_INFO_LIB"],
-            shared_libs: ["vendor.oplus.hardware.cameraMDM@2.0"],
+            shared_libs: ["//hardware/oneplus:vendor.oneplus.hardware.camera@1.0"],
+        },
+    },
+}
+
+soong_config_module_type {
+    name: "aapt_version_code",
+    module_type: "java_defaults",
+    config_namespace: "lineageGlobalVars",
+    value_variables: ["aapt_version_code"],
+    properties: ["aaptflags"],
+}
+
+aapt_version_code {
+    name: "aapt_version_code_defaults",
+    soong_config_variables: {
+        aapt_version_code: {
+            aaptflags: [
+                "--version-code",
+                "%s",
+            ],
+        },
+    },
+}
+
+soong_config_module_type {
+    name: "target_alternative_futex_waiters",
+    module_type: "cc_defaults",
+    config_namespace: "customGlobalVars",
+    bool_variables: ["target_alternative_futex_waiters"],
+    properties: [
+        "cflags",
+        "cppflags",
+    ],
+}
+target_alternative_futex_waiters {
+    name: "target_alternative_futex_waiters_defaults",
+    soong_config_variables: {
+        target_alternative_futex_waiters: {
+            cflags: ["-DTARGET_ALTERNATIVE_FUTEX_WAITERS"],
+            cppflags: ["-DTARGET_ALTERNATIVE_FUTEX_WAITERS"],
         },
     },
 }
